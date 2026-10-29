@@ -1,93 +1,63 @@
-# Cahaya Ornamen — System Architecture & Business Flow
+# Solkit Smart-Commerce & AI-GEO Hub — System Architecture & Business Flow
 
-## 1. Ringkasan Eksekutif & Identitas Bisnis
-- **Nama Bisnis:** Cahaya Ornamen (`cahayaornamen.com`)
-- **Core Industry:** Manufaktur & Kontraktor Ornamen Arsitektur Klasik & Modern (GRC Krawangan, Lis Profil, Pilar Romawi/Korintus, Kubah Masjid, Ornamen Relief, dan Panel Dinding).
-- **Core Value Proposition:** Presisi cetakan tinggi, formula GRC tahan cuaca ekstrem, custom design fleksibel, serta layanan end-to-end (desain, produksi pabrikasi, pengiriman, dan instalasi lapangan).
+Dokumen ini mendefinisikan arsitektur sistem, struktur multi-tenant, dan alur bisnis proses untuk **Solkit Smart-Commerce & AI-GEO Hub** (`system.solkit.tech`).
 
 ---
 
-## 2. Stack Teknologi
-| Layer | Teknologi | Peran & Alasan Pemilihan |
-| :--- | :--- | :--- |
-| **Backend Framework** | Laravel 11 | Router, Authentication, Media Management, ORM Eloquent, REST/Inertia Controller |
-| **Frontend Framework** | Vue 3 (Composition API) | UI Reaktif, modular component-based, state management yang efisien |
-| **Monolith Bridge** | Inertia.js v2 | Menghubungkan Laravel & Vue tanpa perlu membangun REST API terpisah, routing terintegrasi |
-| **Styling Engine** | Tailwind CSS v3 | Utility-first CSS, custom token warna arsitektur warm & dark green, responsive grid |
-| **Animation & Motion** | GSAP & Vue Transitions | Animasi halus, subtle parallax, hover micro-interactions, scroll reveal non-generic |
-| **Database** | MySQL 8.x / MariaDB | Relasional database dengan indexing optimal untuk catalog & SEO article |
+## 1. Profil & Model Bisnis
+- **Nama Platform:** Solkit Smart-Commerce & AI-GEO Hub
+- **Target Domain:** `system.solkit.tech`
+- **Model Bisnis:** B2B Multi-tenant SaaS untuk memfasilitasi UMKM, toko ritel, dan brand lokal membuat Toko Online Instan berbasis Link-Commerce dengan checkout WhatsApp terpadu dan optimasi Generative Engine Optimization (GEO).
 
 ---
 
-## 3. Alur Bisnis (End-to-End User Journey)
+## 2. Alur Bisnis Proses (End-to-End Business Flow)
 
 ```
-[ Pengunjung / Calon Klien ]
-             │
-             ├──► 1. Homepage (Editorial Vibe, Hero Asimetris, Value Prop)
-             │
-             ├──► 2. Katalog Produk (Filter: Krawangan, Kubah, Pilar, Lis)
-             │         └── Modal / Detail Produk (Spesifikasi, Material GRC)
-             │
-             ├──► 3. Portofolio Proyek (Bento Grid, Foto Lapangan, Filter Tipe Bangunan)
-             │         └── Case Study (Luas area, lingkup ornamen, lokasi)
-             │
-             ├──► 4. Artikel / Tips Arsitektur (Edukasi GRC, Panduan Desain, SEO)
-             │
-             └──► 5. Konversi Utama (Lead Capture)
-                       ├── WhatsApp Floating / Direct CTA (Aksen #e1e100)
-                       └── Form Konsultasi & Estimasi RAB
+[Merchant Onboarding / Admin]
+       │
+       ▼
+1. Registrasi Tenant & Pengaturan Profil Toko (WhatsApp Hotline, Tema, Branding)
+       │
+       ▼
+2. Input Inventaris Produk (Katalog 50 - 200+ varian, SKU, Harga, Stok)
+       │
+       ├──────────────────────────────────────────────┐
+       ▼                                              ▼
+[Storefront Link-Commerce]               [GEO Module Worker/API]
+       │                                              │
+3. Calon Pembeli Mengakses Storefront        3a. Otomatis generate:
+   - Pilih Kategori & Search                      - /llms.txt (format AI)
+   - Tanya AI Sales Consultant (RAG)              - /sitemap.xml
+   - Tambah Produk ke Keranjang (Cart)            - /robots.txt
+       │                                          - Schema.org JSON-LD
+       ▼                                              │
+4. Checkout Instan (Form Nama, HP, Alamat)           ▼
+       │                                  Terindeks oleh ChatGPT,
+       ▼                                  Gemini, dan Perplexity
+5. Simpan Pesanan ke OMS (Status: Pending)
+       │
+       ▼
+6. Redirect Otomatis ke WhatsApp Penjual (Pesan Terformat Rapi)
+       │
+       ▼
+7. Penjual Konfirmasi Pembayaran & Pengiriman di Dashboard Merchant
 ```
 
 ---
 
-## 4. Struktur Direktori Modular
+## 3. Komponen Arsitektur Utama
 
-```
-ivan-arstiek-sistem/
-├── app/
-│   ├── Http/
-│   │   └── Controllers/
-│   │       ├── HomeController.php          # Homepage Controller
-│   │       ├── ProductController.php       # Katalog & Detail Produk
-│   │       ├── PortfolioController.php     # Galeri Proyek Lapangan
-│   │       ├── ArticleController.php       # Edukasi & Blog Arsitektur
-│   │       ├── InquiryController.php       # Form Konsultasi & Kontak
-│   │       └── Admin/                      # CMS Admin Panel
-│   └── Models/
-│       ├── Category.php
-│       ├── Product.php
-│       ├── ProductImage.php
-│       ├── Portfolio.php
-│       ├── PortfolioImage.php
-│       ├── Post.php
-│       ├── Inquiry.php
-│       └── Setting.php
-├── docs/                                  # Fundamental Rules & Architecture
-│   ├── ARCHITECTURE.md
-│   ├── DATABASE_SCHEMA.md
-│   ├── DESIGN_SYSTEM.md
-│   └── CODING_STANDARDS.md
-├── resources/
-│   ├── js/
-│   │   ├── Components/
-│   │   │   └── Frontend/                   # Reusable UI Blocks
-│   │   │       ├── HeaderNavbar.vue
-│   │   │       ├── HeroSection.vue
-│   │   │       ├── AboutSection.vue
-│   │   │       ├── ServicesSection.vue
-│   │   │       ├── FeaturedCatalogSection.vue
-│   │   │       ├── ProductCard.vue
-│   │   │       ├── PortfolioBentoSection.vue
-│   │   │       ├── TestimonialsSection.vue
-│   │   │       ├── ArticlePreviewSection.vue
-│   │   │       ├── ConsultationCtaSection.vue
-│   │   │       ├── FooterSection.vue
-│   │   │       └── FloatingWhatsapp.vue
-│   │   └── Pages/
-│   │       ├── Homepage.vue
-│   │       ├── Products/
-│   │       ├── Portfolios/
-│   │       └── Articles/
-└── tailwind.config.js                     # Custom Architectural Palette
-```
+### A. Multi-Tenant Shared Database
+- Setiap tabel transaksi dan konten (`products`, `orders`, `categories`, `store_settings`) memiliki kolom `tenant_id`.
+- `BelongsToTenant` trait dan `TenantScope` memastikan isolasi data secara otomatis.
+
+### B. Generative Engine Optimization (GEO)
+- Endpoint `/llms.txt` merender katalog produk dan informasi merchant dalam standar markdown ringkas untuk memudahkan web-crawlers AI menjawab pertanyaan konsumen.
+- Schema.org (`Product`, `Store`, `Offer`) disematkan pada setiap halaman produk.
+
+### C. AI Sales Consultant (RAG-Lite)
+- Endpoint `/api/v1/chat` mengekstraksi katalog produk tenant secara real-time dan menginjeksinya ke prompt LLM untuk melayani pertanyaan pembeli.
+
+### D. Infrastruktur Container
+- `docker-compose.yml` membungkus Laravel, PostgreSQL 16, dan Redis 7 Cache.

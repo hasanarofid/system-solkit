@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  # 1. Main Application Service (Laravel + PHP-FPM / Server)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: solkit_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    environment:
+      APP_NAME: "Solkit Smart-Commerce & AI-GEO Hub"
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_URL: "https://system.solkit.tech"
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: solkit_db
+      DB_USERNAME: solkit_user
+      DB_PASSWORD: solkit_secure_password
+      CACHE_STORE: redis
+      SESSION_DRIVER: redis
+      QUEUE_CONNECTION: redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    volumes:
+      - .:/var/www/html
+      - solkit_product_storage:/var/www/html/storage/app/public
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - solkit_network
+
+  # 2. Database Service (PostgreSQL 16)
+  postgres:
+    image: postgres:16-alpine
+    container_name: solkit_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: solkit_db
+      POSTGRES_USER: solkit_user
+      POSTGRES_PASSWORD: solkit_secure_password
+    volumes:
+      - solkit_db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U solkit_user -d solkit_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - solkit_network
+
+  # 3. Cache & Session Service (Redis 7)
+  redis:
+    image: redis:7-alpine
+    container_name: solkit_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - solkit_redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - solkit_network
+
+networks:
+  solkit_network:
+    driver: bridge
+
+volumes:
+  solkit_db_data:
+    driver: local
+  solkit_redis_data:
+    driver: local
+  # VPS host volume constraint management (limits image storage size)
+  solkit_product_storage:
+    driver: local

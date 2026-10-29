@@ -1,126 +1,70 @@
-# Cahaya Ornamen — Database Schema & Data Dictionary
+# Solkit Smart-Commerce — Database Schema & Data Dictionary
 
-## 1. Entity Relationship Overview
-Sistem ini menggunakan struktur relasional terpadu antara:
-- **`categories`**: Mengelompokkan produk, portofolio, dan artikel secara fleksibel menggunakan field `type`.
-- **`products` & `product_images`**: Katalog ornamen arsitektur dengan spesifikasi teknis dan multi-gambar.
-- **`portfolios` & `portfolio_images`**: Dokumentasi proyek pemasangan di lapangan dengan metadata proyek (klien, lokasi, tahun, lingkup ornamen).
-- **`posts` (Articles)**: Artikel tips dan panduan teknis ornamen untuk optimasi SEO on-page.
-- **`inquiries`**: Lead capture untuk konsultasi, request katalog, atau estimasi RAB.
+Arsitektur database dirancang untuk platform multi-tenant shared database menggunakan PostgreSQL 16.
 
 ---
 
-## 2. Definisi Skema Tabel
+## 1. Relasi Entity-Relationship (ERD Ringkas)
 
-### 2.1. Tabel `categories`
-Menyimpan taksonomi kategori untuk Produk, Portofolio, atau Artikel.
-```sql
-CREATE TABLE `categories` (
-  `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  `name` VARCHAR(255) NOT NULL,
-  `slug` VARCHAR(255) NOT NULL UNIQUE,
-  `type` ENUM('product', 'portfolio', 'post') NOT NULL DEFAULT 'product',
-  `description` TEXT NULL,
-  `image` VARCHAR(255) NULL,
-  `order` INT NOT NULL DEFAULT 0,
-  `is_active` BOOLEAN NOT NULL DEFAULT TRUE,
-  `created_at` TIMESTAMP NULL,
-  `updated_at` TIMESTAMP NULL,
-  INDEX `idx_categories_type_active` (`type`, `is_active`)
-);
-```
+- **`tenants`** (1) ───< **`users`** (N)
+- **`tenants`** (1) ─── (1) **`store_settings`**
+- **`tenants`** (1) ───< **`categories`** (N)
+- **`tenants`** (1) ───< **`products`** (N)
+- **`tenants`** (1) ───< **`orders`** (N)
+- **`orders`** (1) ───< **`order_items`** (N)
 
-### 2.2. Tabel `products` & `product_images`
-Menyimpan katalog item ornamen (Krawangan GRC, Pilar, Lis Profil, Kubah, dll).
-```sql
-CREATE TABLE `products` (
-  `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  `category_id` BIGINT UNSIGNED NOT NULL,
-  `name` VARCHAR(255) NOT NULL,
-  `slug` VARCHAR(255) NOT NULL UNIQUE,
-  `sku` VARCHAR(100) NULL,
-  `material` VARCHAR(100) NOT NULL DEFAULT 'GRC (Glassfibre Reinforced Concrete)',
-  `dimensions` VARCHAR(255) NULL,
-  `short_description` VARCHAR(500) NULL,
-  `description` LONGTEXT NULL,
-  `specifications` JSON NULL, -- { "ketebalan": "15-20mm", "berat_m2": "30-40kg", "finishing": "Cat Weatherproof / Raw" }
-  `thumbnail` VARCHAR(255) NULL,
-  `price_range` VARCHAR(150) NULL, -- Misal: "Mulai Rp 180.000 / m²" atau "Hubungi Sales"
-  `is_featured` BOOLEAN NOT NULL DEFAULT FALSE,
-  `status` ENUM('draft', 'published', 'archived') NOT NULL DEFAULT 'published',
-  `order` INT NOT NULL DEFAULT 0,
-  `created_at` TIMESTAMP NULL,
-  `updated_at` TIMESTAMP NULL,
-  FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON DELETE RESTRICT,
-  INDEX `idx_products_featured_status` (`is_featured`, `status`),
-  INDEX `idx_products_category` (`category_id`)
-);
+---
 
-CREATE TABLE `product_images` (
-  `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  `product_id` BIGINT UNSIGNED NOT NULL,
-  `image_path` VARCHAR(255) NOT NULL,
-  `caption` VARCHAR(255) NULL,
-  `order` INT NOT NULL DEFAULT 0,
-  `is_primary` BOOLEAN NOT NULL DEFAULT FALSE,
-  `created_at` TIMESTAMP NULL,
-  `updated_at` TIMESTAMP NULL,
-  FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE CASCADE
-);
-```
+## 2. Definisi Tabel
 
-### 2.3. Tabel `portfolios` & `portfolio_images`
-Menyimpan portofolio hasil pemasangan fisik ornamen arsitektur di proyek riil.
-```sql
-CREATE TABLE `portfolios` (
-  `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  `category_id` BIGINT UNSIGNED NULL,
-  `title` VARCHAR(255) NOT NULL,
-  `slug` VARCHAR(255) NOT NULL UNIQUE,
-  `client_name` VARCHAR(255) NULL,
-  `project_type` VARCHAR(100) NULL, -- Masjid, Hunian Klasik, Gedung Pemerintah, Villa
-  `location` VARCHAR(255) NULL,     -- Surabaya, Jakarta, Medan, dll.
-  `completion_year` VARCHAR(10) NULL,
-  `ornament_scope` VARCHAR(255) NULL, -- Misal: "Krawangan GRC 240 m², Kubah Ø8m"
-  `description` TEXT NULL,
-  `thumbnail` VARCHAR(255) NULL,
-  `is_featured` BOOLEAN NOT NULL DEFAULT FALSE,
-  `status` ENUM('draft', 'published') NOT NULL DEFAULT 'published',
-  `order` INT NOT NULL DEFAULT 0,
-  `created_at` TIMESTAMP NULL,
-  `updated_at` TIMESTAMP NULL,
-  FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON DELETE SET NULL,
-  INDEX `idx_portfolios_featured_status` (`is_featured`, `status`)
-);
+### A. `tenants`
+| Kolom | Tipe | Keterangan |
+| :--- | :--- | :--- |
+| `id` | BIGINT PK | Primary key |
+| `name` | VARCHAR | Nama bisnis/toko |
+| `slug` | VARCHAR UNIQUE | Identifier sub-path (`/shop/{slug}`) |
+| `custom_domain`| VARCHAR UNIQUE | Domain kustom tenant (opsional) |
+| `phone_whatsapp`| VARCHAR | Nomor WhatsApp resmi untuk checkout |
+| `email` | VARCHAR | Email kontak |
+| `address` | TEXT | Alamat operasional toko |
+| `logo_url` | VARCHAR | Path logo toko |
+| `is_active` | BOOLEAN | Status aktif tenant |
+| `business_profile` | JSON | Metadata jam kerja & kategori UMKM |
 
-CREATE TABLE `portfolio_images` (
-  `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  `portfolio_id` BIGINT UNSIGNED NOT NULL,
-  `image_path` VARCHAR(255) NOT NULL,
-  `caption` VARCHAR(255) NULL,
-  `order` INT NOT NULL DEFAULT 0,
-  `created_at` TIMESTAMP NULL,
-  `updated_at` TIMESTAMP NULL,
-  FOREIGN KEY (`portfolio_id`) REFERENCES `portfolios`(`id`) ON DELETE CASCADE
-);
-```
+### B. `store_settings`
+| Kolom | Tipe | Keterangan |
+| :--- | :--- | :--- |
+| `id` | BIGINT PK | Primary key |
+| `tenant_id` | BIGINT FK | Foreign key ke `tenants.id` (UNIQUE) |
+| `store_name` | VARCHAR | Display name toko |
+| `tagline` | VARCHAR | Tagline banner toko |
+| `about` | TEXT | Deskripsi profil toko |
+| `primary_color` | VARCHAR | Warna aksen utama (HEX) |
+| `currency` | VARCHAR | Kode mata uang (default: `IDR`) |
+| `currency_symbol` | VARCHAR | Simbol mata uang (default: `Rp`) |
+| `wa_checkout_template` | TEXT | Format template pesan WhatsApp |
+| `llm_system_prompt` | TEXT | Custom prompt untuk AI Sales Consultant |
+| `is_ai_sales_enabled` | BOOLEAN | Flag status aktif AI Assistant |
 
-### 2.4. Tabel `inquiries` (Leads & Konsultasi WA/Form)
-Menyimpan leads dari calon klien yang mengisi formulir penawaran / konsultasi ornamen.
-```sql
-CREATE TABLE `inquiries` (
-  `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  `name` VARCHAR(255) NOT NULL,
-  `phone` VARCHAR(50) NOT NULL,
-  `email` VARCHAR(255) NULL,
-  `project_type` VARCHAR(100) NULL,
-  `location` VARCHAR(255) NULL,
-  `estimated_volume` VARCHAR(100) NULL, -- misal: ~50m², 1 Kubah
-  `message` TEXT NOT NULL,
-  `status` ENUM('new', 'contacted', 'quoted', 'closed') NOT NULL DEFAULT 'new',
-  `notes` TEXT NULL,
-  `created_at` TIMESTAMP NULL,
-  `updated_at` TIMESTAMP NULL,
-  INDEX `idx_inquiries_status` (`status`)
-);
-```
+### C. `products`
+| Kolom | Tipe | Keterangan |
+| :--- | :--- | :--- |
+| `id` | BIGINT PK | Primary key |
+| `tenant_id` | BIGINT FK | Foreign key ke `tenants.id` |
+| `category_id` | BIGINT FK | Kategori produk |
+| `name` | VARCHAR | Nama produk |
+| `slug` | VARCHAR | URL slug produk |
+| `sku` | VARCHAR | Stock Keeping Unit |
+| `price` | DECIMAL(14,2) | Harga jual |
+| `compare_at_price` | DECIMAL(14,2) | Harga coret / diskon |
+| `stock` | INT | Jumlah stok barang |
+| `weight_grams` | INT | Berat produk (gram) |
+| `short_description` | VARCHAR | Ringkasan untuk preview & AI GEO |
+| `description` | TEXT | Deskripsi lengkap produk |
+| `thumbnail` | VARCHAR | Path gambar utama |
+| `is_featured` | BOOLEAN | Penanda produk unggulan |
+| `status` | VARCHAR | `published`, `draft`, `archived` |
+
+### D. `orders` & `order_items`
+- **`orders`**: Menyimpan order number, customer name, phone, address, total amount, status (`pending`, `confirmed`, `completed`, `cancelled`), payment method (`whatsapp_checkout`).
+- **`order_items`**: Menyimpan detail produk, price, quantity, dan subtotal per item.

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 215" fill="none">
+  <!-- Sayap Kiri Bersih Kontras di Dark Mode -->
+  <path d="M 2,67 Q 50,88 98,110 L 61,169 Q 36,125 2,67 Z" fill="#FFFFFF" />
+  
+  <!-- Sayap Kanan Biru Elektrik Resmi SOLKIT -->
+  <path d="M 146,5 L 141,124 L 164,144 L 32,201 L 61,169 L 98,110 Z" fill="#0052FF" />
+  
+  <!-- Teks SOLKIT Vektor Tebal (Ultra Crisp) -->
+  <text x="194" y="86" font-family="'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif" font-weight="900" font-size="74" fill="#FFFFFF" letter-spacing="-1.5">SOLKIT</text>
+  
+  <!-- Teks Solusi Kode Kita Vektor (Biru Muda Tajam & Terbaca Jelas) -->
+  <text x="194" y="160" font-family="'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif" font-weight="500" font-size="34" fill="#38BDF8" letter-spacing="1.2">Solusi Kode Kita</text>
+</svg>

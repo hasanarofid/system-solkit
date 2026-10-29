@@ -4,8 +4,9 @@ import { Link, router, usePage } from '@inertiajs/vue3';
 import { 
   LayoutDashboard, 
   Settings as SettingsIcon, 
-  FileText, 
-  Users, 
+  ShoppingBag, 
+  ShoppingCart,
+  ExternalLink,
   Menu, 
   X, 
   LogOut, 
@@ -26,9 +27,10 @@ const isUserMenuOpen = ref(false);
 
 const navigation = [
   { name: 'Dashboard', href: route('admin.dashboard'), icon: LayoutDashboard, current: route().current('admin.dashboard') },
-  { name: 'Pages & Sections', href: route('admin.pages.index'), icon: Layers, current: route().current('admin.pages.*') },
-  { name: 'Posts & Categories', href: route('admin.posts.index'), icon: FileText, current: route().current('admin.posts.*') },
-  { name: 'Web Settings', href: route('admin.settings.index'), icon: SettingsIcon, current: route().current('admin.settings.index') },
+  { name: 'Katalog Produk', href: route('admin.products.index'), icon: ShoppingBag, current: route().current('admin.products.*') },
+  { name: 'Pesanan Masuk (OMS)', href: route('admin.orders.index'), icon: ShoppingCart, current: route().current('admin.orders.*') },
+  { name: 'Pengaturan Toko', href: route('admin.settings.index'), icon: SettingsIcon, current: route().current('admin.settings.index') },
+  { name: 'Lihat Toko Online', href: '/', icon: ExternalLink, current: false },
 ];
 
 const logout = () => {
@@ -57,12 +59,12 @@ const logout = () => {
         <!-- Sidebar Header / Logo -->
         <div :class="[isSidebarCollapsed ? 'lg:px-0 lg:justify-center' : 'px-6 justify-between', 'flex items-center h-20 border-b border-slate-800']">
           <Link :href="route('admin.dashboard')" class="flex items-center gap-3">
-            <div class="p-2.5 bg-indigo-600 rounded-xl shadow-lg shadow-indigo-650/30 shrink-0">
-              <Layers class="w-5 h-5 text-white" />
+            <div class="p-1.5 bg-white rounded-xl shadow-md shrink-0">
+              <img src="/images/solkit-clean.png" alt="Solkit" class="w-7 h-7 object-contain" />
             </div>
             <div :class="[isSidebarCollapsed ? 'lg:hidden' : 'block', 'transition-opacity duration-300']">
-              <h1 class="text-sm font-bold tracking-tight text-white uppercase">CMS Panel</h1>
-              <p class="text-xxs text-indigo-400 font-medium tracking-wide">SaaS SaaS-Boilerplate</p>
+              <h1 class="text-sm font-bold tracking-tight text-white uppercase">Solkit Hub</h1>
+              <p class="text-xxs text-indigo-400 font-medium tracking-wide">Smart-Commerce &amp; GEO</p>
             </div>
           </Link>
           <button 

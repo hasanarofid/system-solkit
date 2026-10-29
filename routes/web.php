@@ -1,43 +1,47 @@
 <?php
 
-use App\Http\Controllers\ArticleController;
-use App\Http\Controllers\ContactController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PortfolioController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\OrderManagerController;
+use App\Http\Controllers\Admin\ProductManagerController;
 use App\Http\Controllers\Admin\SettingController;
-use App\Http\Controllers\Admin\PageController;
-use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StorefrontController;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Public Routes - Cahaya Ornamen
+| Generative Engine Optimization (GEO) Dynamic Endpoints
 |--------------------------------------------------------------------------
 */
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/llms.txt', [StorefrontController::class, 'llmsTxt'])->name('geo.llmstxt');
+Route::get('/sitemap.xml', [StorefrontController::class, 'sitemapXml'])->name('geo.sitemap');
+Route::get('/robots.txt', [StorefrontController::class, 'robotsTxt'])->name('geo.robots');
 
-// Katalog Produk Ornamen
-Route::get('/katalog', [ProductController::class, 'index'])->name('products.index');
-Route::get('/katalog/{slug}', [ProductController::class, 'show'])->name('products.show');
-
-// Portofolio Proyek Terpasang
-Route::get('/portofolio', [PortfolioController::class, 'index'])->name('portfolios.index');
-Route::get('/portofolio/{slug}', [PortfolioController::class, 'show'])->name('portfolios.show');
-
-// Artikel & Tips Arsitektur (SEO)
-Route::get('/artikel', [ArticleController::class, 'index'])->name('articles.index');
-Route::get('/artikel/{slug}', [ArticleController::class, 'show'])->name('articles.show');
-
-// Kontak & Form Konsultasi Lead
-Route::get('/kontak', [ContactController::class, 'index'])->name('contact.index');
-Route::post('/konsultasi', [ContactController::class, 'store'])->name('inquiries.store');
+Route::get('/shop/{tenant_slug}/llms.txt', [StorefrontController::class, 'llmsTxt']);
+Route::get('/shop/{tenant_slug}/sitemap.xml', [StorefrontController::class, 'sitemapXml']);
+Route::get('/shop/{tenant_slug}/robots.txt', [StorefrontController::class, 'robotsTxt']);
 
 /*
 |--------------------------------------------------------------------------
-| Auth & Admin CMS Routes
+| Smart Link-Commerce (Storefront & Catalog)
+|--------------------------------------------------------------------------
+*/
+// Root Storefront (default tenant / resolved from subdomain)
+Route::get('/', [StorefrontController::class, 'index'])->name('home');
+Route::post('/checkout', [StorefrontController::class, 'checkout'])->name('storefront.checkout.root');
+Route::post('/chat', [StorefrontController::class, 'chat'])->name('storefront.chat.root');
+
+// Multi-tenant Storefront with explicit slug
+Route::prefix('shop/{tenant_slug}')->name('shop.')->group(function () {
+    Route::get('/', [StorefrontController::class, 'index'])->name('index');
+    Route::get('/products/{product_slug}', [StorefrontController::class, 'showProduct'])->name('product.show');
+    Route::post('/checkout', [StorefrontController::class, 'checkout'])->name('checkout');
+    Route::post('/chat', [StorefrontController::class, 'chat'])->name('chat');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Merchant & Tenant Admin Panel (OMS, Inventory, Settings)
 |--------------------------------------------------------------------------
 */
 Route::get('/dashboard', function () {
@@ -50,22 +54,20 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Admin CMS Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
-    // Settings
+
+    // Products Management (50 - 200+ items catalog)
+    Route::resource('products', ProductManagerController::class);
+
+    // Order Management System (OMS)
+    Route::get('/orders', [OrderManagerController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderManagerController::class, 'show'])->name('orders.show');
+    Route::patch('/orders/{order}/status', [OrderManagerController::class, 'updateStatus'])->name('orders.update-status');
+
+    // Store Settings (Branding, WhatsApp Hotline, AI Consultant Prompt)
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
-
-    // Pages
-    Route::resource('pages', PageController::class);
-    Route::put('pages/{page}/sections/{section}', [PageController::class, 'updateSection'])->name('pages.sections.update');
-
-    // Posts & Categories
-    Route::resource('posts', PostController::class);
-    Route::post('categories', [PostController::class, 'storeCategory'])->name('categories.store');
-    Route::delete('categories/{category}', [PostController::class, 'destroyCategory'])->name('categories.destroy');
 });
 
 require __DIR__.'/auth.php';

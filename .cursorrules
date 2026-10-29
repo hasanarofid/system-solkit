@@ -1,24 +1,37 @@
-# Aturan Proyek: Cahaya Ornamen CMS
+# Product Requirements Document (PRD)
+**Project Name:** Solkit Smart-Commerce & AI-GEO Hub
+**Target Domain:** system.solkit.tech
+**Tech Stack:** Node.js / Laravel (Backend API), React/Next.js (Frontend), PostgreSQL, Redis, Docker
 
-Proyek ini adalah CMS (Content Management System) khusus untuk bisnis Ornamen Arsitektur & Fabrikasi GRC Cahaya Ornamen. Sistem dibangun menggunakan Laravel 11, Vue 3 (Inertia.js), dan Tailwind CSS.
+## 1. Executive Summary
+Membangun platform B2B Multi-tenant SaaS untuk memfasilitasi UMKM & ritel membuat "Link Commerce / Toko Online" instan yang dilengkapi fitur AI Sales Consultant dan teroptimasi secara Generative Engine Optimization (GEO).
 
-## Panduan Pengembangan:
-1. **Fokus Bisnis Proses**: 
-   - Sistem ini dirancang spesifik untuk perusahaan arsitek (menampilkan portofolio desain, layanan jasa, testimoni klien, dan blog/artikel).
-   - Seperti WordPress namun khusus untuk Arsitek.
+## 2. Core Features (Minimum Viable Product)
+### A. Multi-Tenant Shared Backend System
+* Arsitektur database berbasis `tenant_id` untuk keamanan data isolasi per-klien.
+* Mendukung kapabilitas dasar: Multi-location Inventory, Order Management System (OMS), dan persiapan slot untuk Payment Gateway.
+* Dashboard admin klien untuk manajemen profil usaha dan manajemen inventaris (mendukung 50 hingga 200+ input produk).
 
-2. **Kustomisasi Dinamis (Admin Panel)**:
-   - **Tampilan Identitas**: Admin harus bisa mengubah Logo dan Warna Utama (Primary Color) website dari halaman pengaturan, dan perubahan ini harus langsung tercermin pada frontend.
-   - **Manajemen Halaman Depan**: Panel-panel atau seksi pada halaman depan (Hero, About, Portfolio, Services, Testimonials) harus bersifat dinamis. Admin bisa mengatur urutan, mengaktifkan/menonaktifkan, atau mengubah kontennya.
-   - **Default Template**: Sediakan tampilan awal (default layout) yang sudah terlihat premium dan siap pakai, namun dapat dicustom oleh admin kapan saja.
+### B. Smart Link-Commerce (Storefront)
+* Merender Landing Page dan halaman katalog produk yang responsif secara instan.
+* Implementasi sistem Keranjang Belanja (Cart).
+* Sistem Checkout yang memformat rincian order (produk, qty, harga) dan mengarahkannya otomatis (redirect) menjadi pesan WhatsApp penjual.
 
-3. **Desain & UI/UX**:
-   - Gunakan pendekatan desain modern, elegan, dan clean yang merepresentasikan profesionalisme seorang arsitek.
-   - Panel admin menggunakan dark mode atau desain profesional yang bersih, berbasis Tailwind CSS.
+### C. Generative Engine Optimization (GEO) Module
+* Worker/Script yang otomatis merender `robots.txt`, `sitemap.xml`, dan `llms.txt` per-tenant agar mudah dicerna oleh AI Search Engines (ChatGPT/Gemini/Perplexity).
+* Auto-inject Schema.org (JSON-LD) pada struktur HTML setiap halaman produk.
 
-4. **Teknis**:
-   - Frontend: Vue 3 dengan Composition API dan Inertia.js.
-   - Styling: Tailwind CSS (terapkan CSS Variables untuk dynamic primary color).
-   - Backend: Laravel 11.
-   - Database: MySQL/PostgreSQL (Gunakan migration dan seeder yang lengkap untuk data awal).
-   - Manajemen State: Gunakan composables di Vue 3 atau props dari Inertia.
+### D. AI Sales Agent (Fase 2 / Opsional)
+* API wrapper untuk menginjeksi katalog produk tenant ke dalam *system prompt* LLM (RAG dasar).
+* Endpoint `/api/chat` di storefront untuk membalas pertanyaan pembeli seputar katalog toko sebelum pembeli melakukan checkout.
+
+## 3. Infrastructure & Deployment
+* **Containerization:** Seluruh layanan di-bundle dalam satu environment `docker-compose.yml` (App, DB PostgreSQL, Redis Cache).
+* **Storage:** Manajemen volume host (VPS) untuk aset gambar produk (menjaga batasan limit storage 41 GB).
+* **Caching Strategy:** Penggunaan arsitektur Redis untuk caching halaman toko publik agar performa tetap *blazing fast*.
+
+## 4. Development Steps to Execute in Workspace:
+1. Generate initial database schema PostgreSQL (Tabel: Users, Tenants, Products, Orders, Store_Settings).
+2. Buat struktur folder proyek (Backend & Frontend) yang tersentralisasi.
+3. Buat RESTful/GraphQL API endpoints untuk CRUD produk dan autentikasi.
+4. Buat script logic untuk generator `llms.txt` dan auto-formatting WA Checkout.
