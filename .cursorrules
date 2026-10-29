@@ -1,37 +1,75 @@
-# Product Requirements Document (PRD)
-**Project Name:** Solkit Smart-Commerce & AI-GEO Hub
-**Target Domain:** system.solkit.tech
-**Tech Stack:** Node.js / Laravel (Backend API), React/Next.js (Frontend), PostgreSQL, Redis, Docker
+# Product Requirements Document (PRD) & Execution Roadmap
+**Product Name:** Solkit Smart Merchant (AI-GEO Ready Catalog & WA Checkout)
+**Live Prototype URL:** https://system.solkit.tech/
+**Entity:** Solkit.tech
+**Tech Stack:** Laravel / Node.js (API Backend), Vue 3 / React (Storefront & Admin), MySQL / PostgreSQL, Redis, Docker, MinIO/S3 Storage
 
-## 1. Executive Summary
-Membangun platform B2B Multi-tenant SaaS untuk memfasilitasi UMKM & ritel membuat "Link Commerce / Toko Online" instan yang dilengkapi fitur AI Sales Consultant dan teroptimasi secara Generative Engine Optimization (GEO).
+---
 
-## 2. Core Features (Minimum Viable Product)
-### A. Multi-Tenant Shared Backend System
-* Arsitektur database berbasis `tenant_id` untuk keamanan data isolasi per-klien.
-* Mendukung kapabilitas dasar: Multi-location Inventory, Order Management System (OMS), dan persiapan slot untuk Payment Gateway.
-* Dashboard admin klien untuk manajemen profil usaha dan manajemen inventaris (mendukung 50 hingga 200+ input produk).
+## 1. Executive Summary & Product Objective
+Solkit Smart Merchant adalah platform e-commerce / catalog engine B2B Multi-tenant instan berkecepatan tinggi yang dirancang untuk UMKM, brand ritel, dan bisnis lokal. Platform ini menggabungkan tampilan katalog modern, Checkout langsung ke WhatsApp, AI Sales Consultant Agent, serta pemetaan otomatis Generative Engine Optimization (GEO) (llms.txt, JSON-LD Schema) agar produk merchant mudah ditemukan oleh mesin pencari berbasis AI (ChatGPT, Gemini, Perplexity).
 
-### B. Smart Link-Commerce (Storefront)
-* Merender Landing Page dan halaman katalog produk yang responsif secara instan.
-* Implementasi sistem Keranjang Belanja (Cart).
-* Sistem Checkout yang memformat rincian order (produk, qty, harga) dan mengarahkannya otomatis (redirect) menjadi pesan WhatsApp penjual.
+---
 
-### C. Generative Engine Optimization (GEO) Module
-* Worker/Script yang otomatis merender `robots.txt`, `sitemap.xml`, dan `llms.txt` per-tenant agar mudah dicerna oleh AI Search Engines (ChatGPT/Gemini/Perplexity).
-* Auto-inject Schema.org (JSON-LD) pada struktur HTML setiap halaman produk.
+## 2. Core Modules Specification
 
-### D. AI Sales Agent (Fase 2 / Opsional)
-* API wrapper untuk menginjeksi katalog produk tenant ke dalam *system prompt* LLM (RAG dasar).
-* Endpoint `/api/chat` di storefront untuk membalas pertanyaan pembeli seputar katalog toko sebelum pembeli melakukan checkout.
+| Modul | Komponen / Fitur | Deskripsi Teknis |
+| :--- | :--- | :--- |
+| **Storefront (Front-End)** | • Responsive Product Grid<br>• Dynamic Search & Filter Category<br>• Direct WA Checkout Modal | UI/UX ringan (fast loading), mendukung variasi SKU, harga coret, dan badge ("Unggulan"). Cart state dikelola di client side secara reaktif. |
+| **AI Sales Agent** | • Widget "Tanya AI Sales"<br>• Catalog RAG System | Chatbot berbasis LLM API yang diinjeksi dengan seluruh data produk (SKU, deskripsi, harga, stok) untuk membantu pembeli memilih produk sebelum checkout. |
+| **GEO Engine (AI-SEO)** | • Auto Generator llms.txt<br>• Auto Schema.org (JSON-LD)<br>• Dynamic sitemap.xml & robots.txt | Menghasilkan file semantik otomatis untuk setiap tenant agar terindeks sempurna oleh web crawler AI Search. |
+| **Multi-Tenant Admin** | • Product & Inventory Management<br>• WhatsApp Message Formatter<br>• Tenant Settings | Panel admin untuk merchant menginput produk, mengubah nomor WA tujuan, mengelola kategori, dan mengunggah gambar produk ke Storage. |
 
-## 3. Infrastructure & Deployment
-* **Containerization:** Seluruh layanan di-bundle dalam satu environment `docker-compose.yml` (App, DB PostgreSQL, Redis Cache).
-* **Storage:** Manajemen volume host (VPS) untuk aset gambar produk (menjaga batasan limit storage 41 GB).
-* **Caching Strategy:** Penggunaan arsitektur Redis untuk caching halaman toko publik agar performa tetap *blazing fast*.
+---
 
-## 4. Development Steps to Execute in Workspace:
-1. Generate initial database schema PostgreSQL (Tabel: Users, Tenants, Products, Orders, Store_Settings).
-2. Buat struktur folder proyek (Backend & Frontend) yang tersentralisasi.
-3. Buat RESTful/GraphQL API endpoints untuk CRUD produk dan autentikasi.
-4. Buat script logic untuk generator `llms.txt` dan auto-formatting WA Checkout.
+## 3. 6-Week Development Timeline (Sprint Execution)
+
+### Minggu 1: Fondasi Backend & Arsitektur Multi-Tenant [COMPLETED]
+- [x] Inisialisasi struktur database dengan pemisahan data berbasis `tenant_id`.
+- [x] Pemasangan Authentication System untuk Admin Merchant (Laravel Sanctum/Breeze).
+- [x] Pengembangan REST API CRUD Produk, Kategori, dan SKU.
+
+### Minggu 2: Storage Infrastructure & Storefront Rendering [CURRENT]
+- [x] Penyesuaian UI/UX Front-End agar selaras dengan prototype system.solkit.tech (Header, Search Bar, Product Grid, Floating Cart).
+- [x] Implementasi sistem Cart & Local Storage Management.
+- [ ] Konfigurasi MinIO / S3 Storage Support guna menangani pengunggahan aset/gambar produk merchant.
+
+### Minggu 3: AI Sales Consultant Module
+- [x] Pembuatan pipeline ekstraksi data katalog produk ke format konteks prompt LLM (RAG-lite).
+- [x] Pengembangan endpoint `/api/v1/chat` & `/shop/{slug}/chat` untuk merespon pertanyaan pembeli di modal "Tanya AI Sales".
+- [x] Integrasi guardrails agar AI Sales fokus menjawab informasi seputar produk merchant.
+
+### Minggu 4: Engine GEO & Routing WhatsApp Checkout
+- [x] Pembuatan otomatis file `/llms.txt` per-tenant yang merangkum katalog produk untuk mesin pencari AI.
+- [x] Injeksi Schema.org (Product, Offer, BreadcrumbList) pada HTML Storefront.
+- [x] Penyesuaian generator pesan WhatsApp (Format rapi: Daftar Item, Total Harga, SKU, dan Alamat Pengiriman).
+
+### Minggu 5: QA, Performance Tuning, & Hardening
+- [x] Integrasi SSL, domain wildcard, dan konfigurasi Reverse Proxy (Nginx).
+- [ ] Pengujian beban (Stress Test) pada VPS untuk memastikan daya tahan shared backend.
+- [ ] Pengujian responsivitas seluler (Mobile UX) dan optimasi skor Google PageSpeed.
+
+### Minggu 6: Peluncuran Resmi & Onboarding
+- [x] Deployment versi produksi v1.0 ke VPS host (`system.solkit.tech`).
+- [ ] Migrasi akun merchant uji coba awal.
+- [ ] Pembukaan sistem pendaftaran merchant/klien secara komersial.
+
+---
+
+## 4. Go-To-Market & Commercialization Strategy
+
+### A. Model Penetapan Harga (Pricing Strategy)
+1. **Paket Starter (Rp 1.500.000 / setup):** Profil Usaha + Katalog Produk (hingga 50 produk) + WA Checkout.
+2. **Paket E-Commerce Lite + AI (Rp 2.800.000 / setup atau Rp 250.000/bulan):** Katalog Lengkap + Fitur "Tanya AI Sales" + Optimasi GEO (llms.txt) + Keranjang Belanja.
+3. **Paket Custom Enterprise (Mulai Rp 4.500.000+):** Custom Domain, Multi-Location Inventory, dan Integrasi Payment Gateway.
+
+### B. Matriks Strategi Promosi
+- **Minggu 1-2:** Pre-Launch Outreach (DM & Threads Strategy).
+- **Minggu 3-4:** Content Marketing & AI-GEO Authority Building (Video/Carousel demonstrasi toko online AI Sales).
+- **Minggu 5-6:** Direct Sales Blitz & B2B Demo (F&B lokal, brand fashion, toko gadget dengan program "Free Setup 14 Hari").
+
+---
+
+## 5. Key Performance Indicators (KPIs)
+- **Technical KPI:** Waktu page load Storefront < 1.5 detik, uptime server 99.9%.
+- **Business KPI:** Mendapatkan 10 Merchant Aktif dalam 30 hari pertama setelah launch; mencapai Recurring Revenue (MRR) awal dari biaya langganan/maintenance sistem.
