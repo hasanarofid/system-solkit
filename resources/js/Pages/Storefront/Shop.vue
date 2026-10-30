@@ -180,51 +180,54 @@ const sendAiMessage = async () => {
 
     <div class="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-blue-600 selection:text-white pb-24">
         <!-- Top Navigation Bar -->
-        <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
+            <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2 sm:gap-4">
                 <!-- Brand / Logo -->
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
                     <img
                         :src="tenant.logo_url || '/images/solkit-clean.png'"
                         alt="Solkit Logo"
-                        class="h-9 w-auto object-contain"
+                        class="h-8 sm:h-9 w-auto max-w-[34px] sm:max-w-none object-contain shrink-0"
                     />
-                    <div>
-                        <h1 class="text-lg font-bold text-slate-900 leading-tight">
+                    <div class="min-w-0 flex-1 overflow-hidden">
+                        <h1 class="text-xs sm:text-base md:text-lg font-bold text-slate-900 leading-tight truncate">
                             {{ storeSetting?.store_name || tenant.name }}
                         </h1>
-                        <p class="text-xs text-blue-600 font-medium flex items-center gap-1">
-                            <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                            Verified Merchant &bull; AI-GEO Ready
+                        <p class="text-[10px] sm:text-xs text-blue-600 font-medium flex items-center gap-1 truncate mt-0.5">
+                            <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+                            <span class="truncate">Verified Merchant &bull; AI-GEO Ready</span>
                         </p>
                     </div>
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="flex items-center gap-2 sm:gap-3">
+                <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
                     <!-- AI Consultant Button -->
                     <button
                         @click="isAiChatOpen = true"
-                        class="inline-flex items-center gap-2 px-3 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition border border-indigo-200 shadow-sm"
+                        title="Tanya AI Sales"
+                        aria-label="Tanya AI Sales"
+                        class="inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition border border-indigo-200 shadow-sm shrink-0"
                     >
-                        <svg class="w-4 h-4 text-indigo-600 animate-spin-slow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 text-indigo-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
-                        <span class="hidden sm:inline">Tanya AI Sales</span>
+                        <span class="hidden md:inline">Tanya AI Sales</span>
                     </button>
 
                     <!-- Cart Trigger -->
                     <button
                         @click="isCartOpen = true"
-                        class="relative inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition shadow-sm"
+                        aria-label="Lihat Keranjang"
+                        class="relative inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition shadow-sm shrink-0"
                     >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                         </svg>
-                        <span>Keranjang</span>
+                        <span class="hidden sm:inline">Keranjang</span>
                         <span
                             v-if="totalCartItems > 0"
-                            class="absolute -top-2 -right-2 bg-rose-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center border-2 border-white"
+                            class="absolute -top-1.5 -right-1.5 bg-rose-500 text-white text-[10px] sm:text-xs font-bold rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center border-2 border-white shadow-sm"
                         >
                             {{ totalCartItems }}
                         </span>
