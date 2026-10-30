@@ -72,28 +72,36 @@ const submit = () => {
             <div class="mt-4 block">
                 <label class="flex items-center">
                     <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="ms-2 text-xs font-semibold text-slate-400"
-                        >Remember me</span
+                    <span class="ms-2 text-xs font-medium text-slate-600"
+                        >Ingat saya</span
                     >
                 </label>
             </div>
 
-            <div class="mt-4 flex items-center justify-end">
+            <div class="mt-5 flex items-center justify-between">
                 <Link
                     v-if="canResetPassword"
                     :href="route('password.request')"
-                    class="text-xs font-semibold text-slate-400 hover:text-indigo-400 hover:underline transition-colors"
+                    class="text-xs font-medium text-slate-500 hover:text-blue-600 hover:underline transition-colors"
                 >
-                    Forgot your password?
+                    Lupa password?
                 </Link>
+                <div v-else></div>
 
                 <PrimaryButton
-                    class="ms-4"
+                    class="w-full sm:w-auto"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
-                    Log in
+                    Masuk ke Panel
                 </PrimaryButton>
+            </div>
+
+            <!-- Demo Account Helper -->
+            <div class="mt-6 pt-4 border-t border-slate-100 text-center">
+                <p class="text-[11px] text-slate-400">
+                    Akun Demo Admin: <span class="font-mono text-slate-600 font-semibold">admin@solkit.tech</span> / <span class="font-mono text-slate-600 font-semibold">password</span>
+                </p>
             </div>
         </form>
     </GuestLayout>

@@ -48,6 +48,10 @@ Route::get('/dashboard', function () {
     return redirect()->route('admin.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/admin', function () {
+    return redirect()->route('admin.dashboard');
+})->middleware(['auth'])->name('admin');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -55,6 +59,9 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', function () {
+        return redirect()->route('admin.dashboard');
+    });
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Products Management (50 - 200+ items catalog)

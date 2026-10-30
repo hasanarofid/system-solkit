@@ -45,15 +45,15 @@ const submit = () => {
                 <div class="flex items-center gap-3">
                     <Link
                         :href="route('admin.products.index')"
-                        class="p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition"
+                        class="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition shadow-xs"
                     >
                         <ArrowLeft class="w-5 h-5" />
                     </Link>
                     <div>
-                        <h1 class="text-xl font-bold text-white">
+                        <h1 class="text-xl font-bold text-slate-900">
                             {{ isEditing ? 'Edit Produk' : 'Tambah Produk Baru' }}
                         </h1>
-                        <p class="text-xs text-slate-400">
+                        <p class="text-xs text-slate-500">
                             {{ isEditing ? `Perbarui informasi ${product.name}` : 'Masukkan rincian produk ke katalog merchant.' }}
                         </p>
                     </div>
@@ -61,11 +61,11 @@ const submit = () => {
             </div>
 
             <!-- Form -->
-            <form @submit.prevent="submit" class="bg-slate-950/60 p-6 rounded-2xl border border-slate-800 space-y-6">
+            <form @submit.prevent="submit" class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-xs space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
                                 Nama Produk *
                             </label>
                             <input
@@ -73,18 +73,18 @@ const submit = () => {
                                 type="text"
                                 required
                                 placeholder="Contoh: Wireless Fast Charger 15W"
-                                class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
+                                class="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition"
                             />
-                            <p v-if="form.errors.name" class="text-xs text-rose-400 mt-1">{{ form.errors.name }}</p>
+                            <p v-if="form.errors.name" class="text-xs text-rose-600 mt-1">{{ form.errors.name }}</p>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
                                 Kategori
                             </label>
                             <select
                                 v-model="form.category_id"
-                                class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
+                                class="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition"
                             >
                                 <option value="">Pilih Kategori</option>
                                 <option v-for="cat in categories" :key="cat.id" :value="cat.id">
@@ -94,20 +94,20 @@ const submit = () => {
                         </div>
 
                         <div>
-                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
                                 SKU / Kode Barang
                             </label>
                             <input
                                 v-model="form.sku"
                                 type="text"
                                 placeholder="SLK-001"
-                                class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
+                                class="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition"
                             />
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
                                     Harga Jual (Rp) *
                                 </label>
                                 <input
@@ -116,11 +116,11 @@ const submit = () => {
                                     required
                                     min="0"
                                     placeholder="249000"
-                                    class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
+                                    class="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition"
                                 />
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
                                     Harga Coret (Rp)
                                 </label>
                                 <input
@@ -128,14 +128,14 @@ const submit = () => {
                                     type="number"
                                     min="0"
                                     placeholder="299000"
-                                    class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
+                                    class="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition"
                                 />
                             </div>
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
                                     Stok Tersedia *
                                 </label>
                                 <input
@@ -143,18 +143,18 @@ const submit = () => {
                                     type="number"
                                     required
                                     min="0"
-                                    class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
+                                    class="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition"
                                 />
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
                                     Berat (Gram)
                                 </label>
                                 <input
                                     v-model="form.weight_grams"
                                     type="number"
                                     min="0"
-                                    class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
+                                    class="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition"
                                 />
                             </div>
                         </div>
@@ -162,49 +162,49 @@ const submit = () => {
 
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
                                 URL Thumbnail Foto Produk
                             </label>
                             <input
                                 v-model="form.thumbnail"
                                 type="text"
                                 placeholder="/images/solkit-clean.png"
-                                class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
+                                class="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition"
                             />
                         </div>
 
                         <div>
-                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
-                                Ringkasan Singkat (Untuk AI GEO &amp; WhatsApp)
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
+                                Ringkasan Singkat (Untuk AI GEO & WhatsApp)
                             </label>
                             <textarea
                                 v-model="form.short_description"
                                 rows="2"
                                 placeholder="Deskripsi 1-2 kalimat untuk preview dan asisten AI..."
-                                class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
+                                class="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition"
                             ></textarea>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
                                 Deskripsi Lengkap
                             </label>
                             <textarea
                                 v-model="form.description"
                                 rows="4"
                                 placeholder="Penjelasan lengkap spesifikasi dan manfaat produk..."
-                                class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
+                                class="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition"
                             ></textarea>
                         </div>
 
                         <div class="grid grid-cols-2 gap-4 pt-2">
                             <div>
-                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
                                     Status Publikasi
                                 </label>
                                 <select
                                     v-model="form.status"
-                                    class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
+                                    class="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition"
                                 >
                                     <option value="published">Published</option>
                                     <option value="draft">Draft</option>
@@ -212,13 +212,13 @@ const submit = () => {
                                 </select>
                             </div>
                             <div class="flex items-center pt-6">
-                                <label class="flex items-center gap-2 cursor-pointer">
+                                <label class="flex items-center gap-2 cursor-pointer select-none">
                                     <input
                                         v-model="form.is_featured"
                                         type="checkbox"
-                                        class="rounded bg-slate-900 border-slate-800 text-indigo-600 focus:ring-0"
+                                        class="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
                                     />
-                                    <span class="text-xs font-semibold text-slate-300">Produk Unggulan</span>
+                                    <span class="text-xs font-semibold text-slate-700">Produk Unggulan</span>
                                 </label>
                             </div>
                         </div>
@@ -226,17 +226,17 @@ const submit = () => {
                 </div>
 
                 <!-- Submit Button -->
-                <div class="flex justify-end gap-3 pt-4 border-t border-slate-800">
+                <div class="flex justify-end gap-3 pt-6 border-t border-slate-200">
                     <Link
                         :href="route('admin.products.index')"
-                        class="px-5 py-2.5 rounded-xl border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-900 text-sm font-semibold transition"
+                        class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:text-slate-900 hover:bg-slate-50 text-sm font-semibold transition shadow-xs"
                     >
                         Batal
                     </Link>
                     <button
                         type="submit"
                         :disabled="form.processing"
-                        class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold flex items-center gap-2 shadow-lg shadow-indigo-600/30 transition disabled:opacity-50"
+                        class="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold flex items-center gap-2 shadow-sm transition disabled:opacity-50"
                     >
                         <Save class="w-4 h-4" />
                         <span>{{ form.processing ? 'Menyimpan...' : 'Simpan Produk' }}</span>
