@@ -570,8 +570,10 @@ const sendAiMessage = async () => {
         <footer class="mt-16 bg-white border-t border-slate-200 py-8">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
                 <div class="flex items-center gap-2">
-                    <img :src="'/images/solkit-clean.png'" alt="Solkit" class="h-6 w-auto opacity-70" />
-                    <span>Powered by <strong>Solkit Smart-Commerce</strong> &bull; {{ new Date().getFullYear() }}</span>
+                    <a href="https://solkit.tech" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 hover:text-blue-600 transition group">
+                        <img :src="'/images/solkit-clean.png'" alt="Solkit" class="h-6 w-auto opacity-70 group-hover:opacity-100 transition" />
+                        <span>Powered by <strong class="underline font-bold">Solkit.tech</strong> &bull; {{ new Date().getFullYear() }}</span>
+                    </a>
                 </div>
 
                 <!-- GEO Engine Transparency Links -->
